@@ -1,0 +1,5 @@
+[theme]
+font = "Maven Pro:https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&display=swap"
+
+[runner]
+fastReruns = true

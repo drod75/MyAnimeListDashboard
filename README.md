@@ -1,11 +1,10 @@
 <div align="center">
-  <h3 align="center">MyAnimeListDashboard</h3>
+  <h1 align="center">MyAnimeListDashboard</h3>
 
   <p align="center">
     A dashboard for anime recommendations!
     <br />
     <a href="https://github.com/drod75/MyAnimeListDashboard/issues">Report Bug</a>
-    ·
     <a href="https://github.com/drod75/MyAnimeListDashboard/issues">Request Feature</a>
   </p>
 </div>

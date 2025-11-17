@@ -168,15 +168,15 @@ Project Link: [https://github.com/drod75/MyAnimeListDashboard](https://github.co
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-[Python]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
+[Python]: https://img.shields.io/badge/Python-FFDE57?style=for-the-badge&logo=python&logoColor=4584B6
 [Python-url]: https://www.python.org/
 [Supabase]: https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white
 [Supabase-url]: https://supabase.com/
-[DuckDB]: https://img.shields.io/badge/DuckDB-DDDDDD?style=for-the-badge&logo=duckdb&logoColor=white
+[DuckDB]: https://img.shields.io/badge/DuckDB-FFC40C?style=for-the-badge&logo=duckdb&logoColor=black
 [DuckDB-url]: https://duckdb.org/
 [Pandas]: https://img.shields.io/badge/pandas-150458?style=for-the-badge&logo=pandas&logoColor=white
 [Pandas-url]: https://pandas.pydata.org/
-[Plotly]: https://img.shields.io/badge/Plotly-239120?style=for-the-badge&logo=plotly&logoColor=white
+[Plotly]: https://img.shields.io/badge/Plotly-2A476F?style=for-the-badge&logo=plotly&logoColor=white
 [Plotly-url]: https://plotly.com/
 [Matplotlib]: https://img.shields.io/badge/Matplotlib-003366?style=for-the-badge&logo=matplotlib&logoColor=white
 [Matplotlib-url]: https://matplotlib.org/

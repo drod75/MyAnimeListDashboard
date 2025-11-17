@@ -24,16 +24,13 @@ def get_genre_data() -> pd.DataFrame:
 
     genre_query = """
     select
-    trim(lower(trim(UNNEST(STRING_SPLIT(trim(genre), ','))))) AS genres_cleaned,
+    distinct trim(lower(trim(UNNEST(STRING_SPLIT(trim(genre), ','))))) AS genres_cleaned,
     from supabase.anime 
     """
 
-    available_genres = con.sql(genre_query).df()
-    genres_cleaned = available_genres.groupby('genres_cleaned')["genres_cleaned"].count().reset_index(name='count')
-    genres_cleaned.sort_values(by='count', ascending=False, inplace=True)
-    genres_cleaned = genres_cleaned.iloc[:-1]
-    genres_cleaned.columns = ['genres', 'count']
-    return genres_cleaned
+    available_genres: pd.DataFrame = con.sql(genre_query).df()
+    available_genres.columns = ["genre"]
+    return available_genres["genre"].to_list()
 
 
 def get_type_data() -> pd.DataFrame:
@@ -41,15 +38,12 @@ def get_type_data() -> pd.DataFrame:
 
     type_query = """
     SELECT
-    type,
-    count(type) as type_popularity
-    from supabase.anime
-    group by type
-    order by type_popularity desc
+    distinct type
+    FROM supabase.anime
     """
 
-    types_df = con.sql(type_query).df()
-    return types_df
+    types_df: pd.DataFrame = con.sql(type_query).df()
+    return types_df["type"].to_list()
 
 
 def get_anime_data() -> pd.DataFrame:

@@ -8,31 +8,36 @@ Goal is to provide a space where data is made and then filtered, data will be re
 The cached data will only be changed when filters in sidebar are selected.
 """
 
+
 @st.cache_resource
 def load_duckdb() -> DuckDBPyConnection:
     con = duckdb.connect(":memory:")
     con.sql("load postgres;")
-    con.sql(f"ATTACH 'dbname={st.secrets["database"]["DB_NAME"]} user={st.secrets["database"]["DB_USER"]} host={st.secrets["database"]["DB_HOST"]} password={st.secrets["database"]["DB_PASSWORD"]} port={st.secrets["database"]["DB_PORT"]}' AS supabase (TYPE postgres, SCHEMA 'public');")
+    con.sql(
+        f"ATTACH 'dbname={st.secrets['database']['DB_NAME']} user={st.secrets['database']['DB_USER']} host={st.secrets['database']['DB_HOST']} password={st.secrets['database']['DB_PASSWORD']} port={st.secrets['database']['DB_PORT']}' AS supabase (TYPE postgres, SCHEMA 'public');"
+    )
     return con
+
 
 def get_genre_data() -> list[str]:
     con = load_duckdb()
-    
-    genre_query="""
+
+    genre_query = """
     select
     distinct trim(lower(trim(UNNEST(STRING_SPLIT(trim(genre), ','))))) AS genre,
     from supabase.anime 
     """
 
     available_genres = con.sql(genre_query).df()
-    available_genres['genre'].dropna(ignore_index=True, inplace=True)
-    available_genres['genre'] = available_genres['genre'].sort_values(ascending=True)
-    return available_genres['genre'].tolist()
+    available_genres["genre"].dropna(ignore_index=True, inplace=True)
+    available_genres["genre"] = available_genres["genre"].sort_values(ascending=True)
+    return available_genres["genre"].tolist()
+
 
 def get_type_data() -> pd.DataFrame:
     con = load_duckdb()
-    
-    type_query ="""
+
+    type_query = """
     SELECT
     type,
     count(type) as type_popularity
@@ -47,9 +52,9 @@ def get_type_data() -> pd.DataFrame:
 
 def get_anime_data() -> pd.DataFrame:
     con = load_duckdb()
-    
+
     anime_df = con.sql("select * from supabase.anime;").df()
-    anime_df['genre'] = anime_df['genre'].str.strip()
-    anime_df['genre'] = anime_df['genre'].str.lower()
-    
+    anime_df["genre"] = anime_df["genre"].str.strip()
+    anime_df["genre"] = anime_df["genre"].str.lower()
+
     return anime_df

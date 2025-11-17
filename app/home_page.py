@@ -101,12 +101,9 @@ for col in anime_df_to_process.columns:
             label=col.replace("_", " ").title(), help=f"The {col} of the Anime."
         )
 
-# --- Refactored Metric Calculation and Display ---
 
 original_df = st.session_state["original_anime_df"]
 
-# 1. Define the aggregations and columns to display
-# The keys are used for the display label, values are the pandas method names.
 AGGREGATIONS = {
     "Average": "mean",
     "Median": "median",
@@ -114,7 +111,6 @@ AGGREGATIONS = {
     "Maximum": "max",
 }
 
-# Defines the column, its base label, and the format string for display.
 METRIC_SPECS = [
     {"column": "rating", "label": "Rating", "format": ".2f"},
     {"column": "members", "label": "Members", "format": ".0f"},
@@ -126,57 +122,52 @@ metric_data = []
 for spec in METRIC_SPECS:
     col_name = spec["column"]
     value_format = spec["format"]
-
-    # Check if the column exists in the current dataframe to prevent errors on empty filters
+    
     if anime_df_to_process.empty:
-        # Append placeholder data if the filter results in an empty dataframe
         for agg_label in AGGREGATIONS:
-            metric_data.append(
-                {
-                    "label": f"{agg_label} {spec['label']}",
-                    "value": 0,
-                    "delta": 0,
-                    "value_format": value_format,
-                }
-            )
+             metric_data.append({
+                "label": f"{agg_label} {spec['label']}",
+                "value": 0,
+                "delta": 0,
+                "value_format": value_format,
+            })
         continue
 
     for agg_label, agg_func_name in AGGREGATIONS.items():
-        # Dynamically get the pandas series function (e.g., df['col'].mean)
         agg_func = getattr(pd.Series, agg_func_name)
 
-        # Calculate current and original values
         current_value = agg_func(anime_df_to_process[col_name])
         original_value = agg_func(original_df[col_name])
-
-        # Calculate the delta
+        
         delta = current_value - original_value
 
-        metric_data.append(
-            {
-                "label": f"{agg_label} {spec['label']}",
-                "value": current_value,
-                "delta": delta,
-                "value_format": value_format,
-            }
-        )
+        metric_data.append({
+            "label": f"{agg_label} {spec['label']}",
+            "value": current_value,
+            "delta": delta,
+            "value_format": value_format,
+        })
 
-# 3. Display metrics using dynamic column creation
-# The metrics are split into two rows (Rating metrics and Members metrics)
-cols_row1 = st.columns(4)
-cols_row2 = st.columns(4)
-all_cols = cols_row1 + cols_row2
 
-for i, data in enumerate(metric_data):
-    # Ensure all_cols has enough elements (it will have 8)
-    if i < len(all_cols):
-        all_cols[i].metric(
-            label=data["label"],
-            value=f"{data['value']:{data['value_format']}}",
-            delta=f"{data['delta']:{data['value_format']}}",
-        )
+# Display Rating Metrics
+st.subheader(":blue[Rating Metrics]")
+cols_rating = st.columns(4)
+for i, data in enumerate(metric_data[:4]):
+    cols_rating[i].metric(
+        label=data["label"],
+        value=f"{data['value']:{data['value_format']}}",
+        delta=f"{data['delta']:{data['value_format']}}",
+    )
 
-# --- End of Refactored Metric Calculation and Display ---
+st.subheader(":blue[Member Count Metrics]")
+cols_members = st.columns(4)
+for i, data in enumerate(metric_data[4:8]):
+    cols_members[i].metric(
+        label=data["label"],
+        value=f"{data['value']:{data['value_format']}}",
+        delta=f"{data['delta']:{data['value_format']}}",
+    )
+
 
 charts = get_charts(anime_df_to_process)
 for chart in charts:

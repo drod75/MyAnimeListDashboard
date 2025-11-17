@@ -17,7 +17,7 @@ anime_df_to_process: pd.DataFrame = st.session_state["original_anime_df"].copy()
 
 with st.sidebar:
     st.session_state["genres_selected"] = st.multiselect(
-        ":blue[What genres would you like!]", st.session_state["genres"]
+        ":blue[What genres would you like!]", st.session_state["genres"]['genres'].to_list()
     )
 
     types_df: pd.DataFrame = st.session_state["types"]

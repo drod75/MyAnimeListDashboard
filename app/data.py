@@ -19,19 +19,21 @@ def load_duckdb() -> DuckDBPyConnection:
     return con
 
 
-def get_genre_data() -> list[str]:
+def get_genre_data() -> pd.DataFrame:
     con = load_duckdb()
 
     genre_query = """
     select
-    distinct trim(lower(trim(UNNEST(STRING_SPLIT(trim(genre), ','))))) AS genre,
+    trim(lower(trim(UNNEST(STRING_SPLIT(trim(genre), ','))))) AS genres_cleaned,
     from supabase.anime 
     """
 
     available_genres = con.sql(genre_query).df()
-    available_genres["genre"].dropna(ignore_index=True, inplace=True)
-    available_genres["genre"] = available_genres["genre"].sort_values(ascending=True)
-    return available_genres["genre"].tolist()
+    genres_cleaned = available_genres.groupby('genres_cleaned')["genres_cleaned"].count().reset_index(name='count')
+    genres_cleaned.sort_values(by='count', ascending=False, inplace=True)
+    genres_cleaned = genres_cleaned.iloc[:-1]
+    genres_cleaned.columns = ['genres', 'count']
+    return genres_cleaned
 
 
 def get_type_data() -> pd.DataFrame:
